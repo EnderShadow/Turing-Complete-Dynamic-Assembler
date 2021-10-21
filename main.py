@@ -68,6 +68,7 @@ num_registers: int = -1
 register_name_mapping: dict[str, int] = {}
 
 instructions: list[Instruction] = []
+instruction_names: set[str] = set()
 
 
 def get_game_directory():
@@ -125,7 +126,7 @@ def main():
             parse_language(yaml.safe_load(f))
         except yaml.YAMLError as exc:
             print(exc)
-
+    print(instruction_names)
     if args.file[0] == '-':
         data = assemble(sys.stdin.read())
     else:
@@ -233,6 +234,7 @@ def parse_language_registers(config):
 
 def parse_language_instructions(config):
     global instructions
+    global instruction_names
 
     for instr in config:
         sections: list[InstructionSection] = []
@@ -258,6 +260,9 @@ def parse_language_instructions(config):
                             del values[k]
                 if default_value is not None and isinstance(default_value, str):
                     default_value = default_value.casefold()
+
+            if values is not None:
+                instruction_names.update(values.keys())
 
             depends_section: Union[int, None] = None
             depends_attribute: Union[str, None] = None
@@ -353,7 +358,7 @@ def assemble(text: str) -> list[int]:
                 token_index += 1
                 parsed_section = True
         if not parsed_section and 'immediate' in section.section_type:
-            if token.token_type in [TokenType.INTEGER, TokenType.IDENTIFIER]:
+            if token.token_type == TokenType.INTEGER or (token.token_type == TokenType.IDENTIFIER and token.value not in instruction_names):
                 decoded_sections.append(('immediate', section.offset, section.size, token.value))
                 section_index += 1
                 token_index += 1
