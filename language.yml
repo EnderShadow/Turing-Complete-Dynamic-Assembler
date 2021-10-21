@@ -1,0 +1,324 @@
+case_sensitive: false
+big_endian: true
+registers:
+  count: 16
+  replace_default_names: true
+  13:
+    - RNG
+  14:
+    - IO
+  15:
+    - PC
+instructions:
+  # ALU instructions
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 1
+      offset: 27
+      type: ignored
+      default: 1
+    - bits: 4
+      offset: 23
+      type: string
+      values:
+        - ADD
+        - SUB
+        - MUL
+        -
+        -
+        - SHL
+        - LSHR
+        - ASHR
+        - AND
+        - NAND
+        - OR
+        - NOR
+        - XOR
+        - XNOR
+        -
+        -
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 5
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 4
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 20
+      type: dependent
+      depends:
+        section: 7
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 4
+      offset: 0
+      type: register
+  # CMP, ST instructions
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 4
+      offset: 24
+      type: ignored
+      default: 0
+    - bits: 1
+      offset: 23
+      type: string
+      values:
+        - CMP
+        - ST
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 5
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 4
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 20
+      type: dependent
+      depends:
+        section: 7
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 4
+      offset: 0
+      type: ignored
+      default: 0
+  # JMP, CALL, PSH instructions
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 2
+      offset: 26
+      type: ignored
+      default: 0
+    - bits: 3
+      offset: 23
+      type: string
+      values:
+        -
+        -
+        - JMP
+        - CALL
+        - PSH
+        -
+        -
+        -
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 1
+      offset: 20
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 6
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 12
+      offset: 0
+      type: ignored
+      default: 0
+  # POP instructions
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 5
+      offset: 23
+      type: ignored
+      default: 5
+    - bits: 0
+      offset: 23
+      type: string
+      values:
+        - POP
+    - bits: 19
+      offset: 4
+      type: ignored
+      default: 0
+    - bits: 4
+      offset: 0
+      type: register
+  # LD, NOT instructions
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 4
+      offset: 24
+      type: ignored
+      default: 3
+    - bits: 1
+      offset: 23
+      type: string
+      values:
+        - LD
+        - NOT
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 1
+      offset: 20
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 6
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 4
+      type: ignored
+      default: 0
+    - bits: 4
+      offset: 0
+      type: register
