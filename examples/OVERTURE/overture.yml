@@ -1,0 +1,74 @@
+case_sensitive: true
+registers:
+  count: 7
+  replace_default_names: true
+  6:
+    - IO
+instructions:
+  # Immediate instruction
+  -
+    - bits: 2
+      offset: 6
+      type: ignored
+      default: 0
+    - bits: 0
+      offset: 6
+      type: string
+      values:
+        - IMM
+    - bits: 6
+      offset: 20
+      type: immediate
+  # Compute instructions
+  -
+    - bits: 5
+      offset: 3
+      type: ignored
+      default: 8
+    - bits: 3
+      offset: 0
+      type: string
+      values:
+        - OR
+        - NAND
+        - NOR
+        - AND
+        - ADD
+        - SUB
+        -
+        -
+  # Copy instruction
+  -
+    - bits: 2
+      offset: 6
+      type: ignored
+      default: 2
+    - bits: 0
+      offset: 6
+      type: string
+      values:
+        - COPY
+    - bits: 3
+      offset: 3
+      type: register
+    - bits: 3
+      offset: 0
+      type: register
+  # Condition instructions
+  -
+    - bits: 5
+      offset: 3
+      type: ignored
+      default: 24
+    - bits: 3
+      offset: 0
+      type: string
+      values:
+        - NJ
+        - JEQ
+        - JLT
+        - JLTE
+        - JMP
+        - JNE
+        - JGTE
+        - JGT
