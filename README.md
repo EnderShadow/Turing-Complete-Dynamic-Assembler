@@ -9,6 +9,16 @@ can be used by the computer you designed within the game.
 
 ---
 
+## Features
+
+- Dynamic instruction length architectures
+- Arbitrarily sized instructions and integers
+- Arbitrarily aligned instruction segments
+- Dependent bit fields
+- Optional mnemonics
+
+---
+
 ## NOTE: There are likely still bugs in here and the error messages are very unhelpful
 
 I plan to fix this soon but, as long as you define your language file correctly and don't have any typos in your
