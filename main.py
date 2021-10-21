@@ -247,7 +247,7 @@ def parse_language_instructions(config):
             if isinstance(section_type, str):
                 section_type = [section_type]
 
-            values: dict[Union[str, int], int] = {value: idx for idx, value in enumerate(section['values'])} if 'values' in section else None
+            values: dict[Union[str, int], int] = {value: idx for idx, value in enumerate(section['values']) if value is not None} if 'values' in section else None
             default_value: Union[str, int] = section['default'] if 'default' in section else None
 
             if not case_sensitive:
