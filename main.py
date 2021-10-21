@@ -103,7 +103,7 @@ def main():
     if args.config is not None:
         with open(args.config, 'r') as f:
             try:
-                parse_config(yaml.safe_load(f))
+                parse_config(yaml.safe_load(f), os.path.dirname(args.config))
             except yaml.YAMLError as exc:
                 print(exc)
 
@@ -162,7 +162,7 @@ def main():
         f.write(data_str)
 
 
-def parse_config(config: dict):
+def parse_config(config: dict, config_dir: str):
     global architecture_name
     global language_file
     global level_name
@@ -171,7 +171,7 @@ def parse_config(config: dict):
     if 'architecture' in config:
         architecture_name = config['architecture']
     if 'language' in config:
-        language_file = config['language']
+        language_file = os.path.join(config_dir, config['language'])
     if 'level' in config:
         level_name = config['level']
     if 'program_name' in config:
