@@ -1,4 +1,4 @@
-# Turing Complete Dynamic Assembler
+# [Turing Complete](https://turingcomplete.game/) Dynamic Assembler
 
 ---
 
