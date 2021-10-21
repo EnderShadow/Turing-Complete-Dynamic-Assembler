@@ -372,8 +372,6 @@ def assemble(text: str) -> list[int]:
             depended_attribute = section.depends_attribute
             if depended_attribute == 'type':
                 value = section.depends_mapping[depended_section[0]]
-                decoded_sections.append(('dependent', section.offset, section.size, value))
-                section_index += 1
             elif depended_attribute == 'value':
                 if isinstance(depended_section[3], int):
                     if section.depends_mapping is None:
@@ -383,9 +381,11 @@ def assemble(text: str) -> list[int]:
                 else:
                     # delegate mapping to convert_to_bytes since a label is preventing us from mapping here
                     value = (section.depends_section, section.depends_mapping)
-                decoded_sections.append(('dependent', section.offset, section.size, value))
             else:
                 raise Exception(f'invalid dependent attribute in instruction section: {depended_attribute}')
+
+            decoded_sections.append(('dependent', section.offset, section.size, value))
+            section_index += 1
             parsed_section = True
 
         if not parsed_section:
