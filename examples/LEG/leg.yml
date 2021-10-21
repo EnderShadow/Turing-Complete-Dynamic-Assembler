@@ -1,0 +1,140 @@
+case_sensitive: false
+big_endian: true
+registers:
+  count: 8
+  replace_default_names: true
+  6:
+    - PC
+  7:
+    - IO
+instructions:
+  # ALU instructions
+  -
+    - bits: 3
+      offset: 27
+      type: ignored
+      default: 0
+    - bits: 3
+      offset: 24
+      type: string
+      values:
+        - ADD
+        - SUB
+        - AND
+        - OR
+        -
+        - XOR
+        -
+        -
+    - bits: 8
+      offset: 16
+      type:
+          - register
+          - immediate
+    - bits: 1
+      offset: 31
+      type: dependent
+      depends:
+        section: 2
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 8
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 30
+      type: dependent
+      depends:
+        section: 4
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 0
+      type: register
+  # NOT instruction
+  -
+    - bits: 7
+      offset: 24
+      type: ignored
+      default: 4
+    - bits: 0
+      offset: 24
+      type: string
+      values:
+        - NOT
+    - bits: 8
+      offset: 16
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 31
+      type: dependent
+      depends:
+        section: 2
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 8
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 0
+      type: register
+  # Jump instructions
+  -
+    - bits: 3
+      offset: 27
+      type: ignored
+      default: 4
+    - bits: 3
+      offset: 24
+      type: string
+      values:
+        - IF_EQUAL
+        - IF_NOT_EQUAL
+        - IF_LESS
+        - IF_LESS_OR_EQUAL
+        - IF_GREATER
+        - IF_GREATER_OR_EQUAL
+        -
+        -
+    - bits: 8
+      offset: 16
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 31
+      type: dependent
+      depends:
+        section: 2
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 8
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 30
+      type: dependent
+      depends:
+        section: 4
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 0
+      type: immediate
