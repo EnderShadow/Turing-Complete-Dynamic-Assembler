@@ -36,7 +36,7 @@ class InstructionSection:
     default_value: Union[str, int]
     depends_section: int
     depends_attribute: str
-    depends_mapping: Union[dict[str, int], list[int]]
+    depends_mapping: Union[dict[str, int], list[int], None]
 
 
 @dataclass
@@ -301,8 +301,8 @@ def assemble(text: str) -> list[int]:
     tokens.append(Token('', TokenType.SENTINEL, -1))
 
     label_map: dict[str, int] = {}
-    decoded_instructions: list[tuple[int, list[tuple[str, int, int, Union[str, int, tuple[int, list[int]]]]]]] = []
-    decoded_sections: list[tuple[str, int, int, Union[str, int, tuple[int, list[int]]]]] = []
+    decoded_instructions: list[tuple[int, list[tuple[str, int, int, Union[str, int, tuple[int, Union[list[int], None]]]]]]] = []
+    decoded_sections: list[tuple[str, int, int, Union[str, int, tuple[int, Union[list[int], None]]]]] = []
     last_good_token_index: int = 0
     token_index: int = 0
     instr_index: int = 0
@@ -376,7 +376,10 @@ def assemble(text: str) -> list[int]:
                 section_index += 1
             elif depended_attribute == 'value':
                 if isinstance(depended_section[3], int):
-                    value = section.depends_mapping[depended_section[3]]
+                    if section.depends_mapping is None:
+                        value = depended_section[3]
+                    else:
+                        value = section.depends_mapping[depended_section[3]]
                 else:
                     # delegate mapping to convert_to_bytes since a label is preventing us from mapping here
                     value = (section.depends_section, section.depends_mapping)
@@ -404,7 +407,7 @@ def assemble(text: str) -> list[int]:
     return byte_stream
 
 
-def convert_to_bytes(decoded_instructions: list[tuple[int, list[tuple[str, int, int, Union[str, int, tuple[int, list[int]]]]]]], label_map: dict[str, int]) -> list[int]:
+def convert_to_bytes(decoded_instructions: list[tuple[int, list[tuple[str, int, int, Union[str, int, tuple[int, Union[list[int], None]]]]]]], label_map: dict[str, int]) -> list[int]:
     decoded_instrs = [x[1] for x in decoded_instructions]
     instruction_sizes = [x[0] for x in decoded_instructions]
 
@@ -421,11 +424,14 @@ def convert_to_bytes(decoded_instructions: list[tuple[int, list[tuple[str, int, 
             if isinstance(value, str):
                 decoded_instr[i] = (section_type, offset, size, label_map[value])
             # handle dependent types that were unable to map values because of labels
-            elif isinstance(value, tuple) and len(value) == 2 and isinstance(value[0], int) and isinstance(value[1], list) and all(map(lambda x: isinstance(x, int), value[1])):
+            elif isinstance(value, tuple) and len(value) == 2 and isinstance(value[0], int) and (value[1] is None or (isinstance(value[1], list) and all(map(lambda x: isinstance(x, int), value[1])))):
                 section_idx: int = value[0]
-                mapping: list[int] = value[1]
+                mapping: Union[list[int], None] = value[1]
                 depended_section: tuple[str, int, int, int] = decoded_instr[section_idx]
-                decoded_instr[i] = (section_type, offset, size, mapping[depended_section[3]])
+                if mapping is None:
+                    decoded_instr[i] = (section_type, offset, size, depended_section[3])
+                else:
+                    decoded_instr[i] = (section_type, offset, size, mapping[depended_section[3]])
 
         for section in decoded_instr:
             _, offset, size, value = section
