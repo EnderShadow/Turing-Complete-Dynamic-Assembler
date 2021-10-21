@@ -3,6 +3,10 @@ big_endian: true
 registers:
   count: 16
   replace_default_names: true
+  11:
+    - LINK
+  12:
+    - FLAG
   13:
     - RNG
   14:
@@ -159,7 +163,7 @@ instructions:
       offset: 0
       type: ignored
       default: 0
-  # JMP, CALL, PSH instructions
+  # PSH instructions
   -
     - bits: 1
       offset: 31
@@ -181,22 +185,15 @@ instructions:
         - '<='
         - '*'
       default: '*'
-    - bits: 2
-      offset: 26
+    - bits: 5
+      offset: 23
       type: ignored
-      default: 0
-    - bits: 3
+      default: 4
+    - bits: 0
       offset: 23
       type: string
       values:
-        -
-        -
-        -
-        - CALL
         - PSH
-        -
-        -
-        -
     - bits: 1
       offset: 22
       type: ignored
@@ -223,7 +220,7 @@ instructions:
       offset: 0
       type: ignored
       default: 0
-  # LD, NOT instructions
+  # LD instructions
   -
     - bits: 1
       offset: 31
@@ -245,18 +242,15 @@ instructions:
         - '<='
         - '*'
       default: '*'
-    - bits: 3
-      offset: 25
+    - bits: 5
+      offset: 23
       type: ignored
-      default: 1
-    - bits: 2
+      default: 5
+    - bits: 0
       offset: 23
       type: string
       values:
-        -
         - LD
-        - NOT
-        -
     - bits: 1
       offset: 22
       type: ignored
@@ -350,7 +344,7 @@ instructions:
     - bits: 5
       offset: 23
       type: ignored
-      default: 16
+      default: 16 # ADD
     - bits: 0
       offset: 23
       type: string
@@ -394,4 +388,211 @@ instructions:
     - bits: 4
       offset: 0
       type: ignored
-      default: 15
+      default: 15 # PC
+  # CALL instruction
+  -
+    - bits: 1
+      offset: 63
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 60
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 5
+      offset: 55
+      type: ignored
+      default: 16 # ADD
+    - bits: 0
+      offset: 55
+      type: string
+      values:
+        - CALL
+    - bits: 3
+      offset: 52
+      type: ignored
+      default: 1
+    - bits: 8
+      offset: 44
+      type: ignored
+      default: 15 # PC
+    - bits: 8
+      offset: 36
+      type: ignored
+      default: 8
+    - bits: 4
+      offset: 32
+      type: ignored
+      default: 11 # LINK
+    - bits: 1
+      offset: 31
+      type: dependent
+      depends:
+        section: 0
+        attribute: value
+        mapping:
+    - bits: 3
+      offset: 28
+      type: dependent
+      depends:
+        section: 1
+        attribute: value
+        mapping:
+    - bits: 5
+      offset: 23
+      type: ignored
+      default: 16 # ADD
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 12
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 4
+      type:
+        - register
+        - immediate
+        - ignored
+      default: 0
+    - bits: 1
+      offset: 20
+      type: dependent
+      depends:
+        section: 14
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+          ignored: 1
+    - bits: 4
+      offset: 0
+      type: ignored
+      default: 15 # PC
+  # RET instruction
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 5
+      offset: 23
+      type: ignored
+      default: 16 # ADD
+    - bits: 0
+      offset: 23
+      type: string
+      values:
+        - RET
+    - bits: 3
+      offset: 20
+      type: ignored
+      default: 1
+    - bits: 8
+      offset: 12
+      type: ignored
+      default: 11 # LINK
+    - bits: 12
+      offset: 0
+      type: ignored
+      default: 15 # PC
+  # NOT instruction
+  -
+    - bits: 1
+      offset: 31
+      type: string
+      values:
+        - 'u'
+        - 's'
+      default: 'u'
+    - bits: 3
+      offset: 28
+      type: string
+      values:
+        - '!'
+        - '>'
+        - '='
+        - '>='
+        - '<'
+        - '!='
+        - '<='
+        - '*'
+      default: '*'
+    - bits: 5
+      offset: 23
+      type: ignored
+      default: 27 # NOR
+    - bits: 0
+      offset: 23
+      type: string
+      values:
+        - NOT
+    - bits: 1
+      offset: 22
+      type: ignored
+      default: 0
+    - bits: 1
+      offset: 20
+      type: ignored
+      default: 1
+    - bits: 8
+      offset: 12
+      type:
+        - register
+        - immediate
+    - bits: 1
+      offset: 21
+      type: dependent
+      depends:
+        section: 6
+        attribute: type
+        mapping:
+          register: 0
+          immediate: 1
+    - bits: 8
+      offset: 4
+      type: ignored
+      default: 0
+    - bits: 4
+      offset: 0
+      type: register

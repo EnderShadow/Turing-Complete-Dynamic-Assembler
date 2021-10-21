@@ -9,6 +9,12 @@ label loop:
     add r0 0 io
     cmp r0 233
 <   jmp loop
-    jmp loop r0
+
+# stop executing code at this point
+    jmp 0 pc
+
+# compilation tests below. Never executed
+=   call loop
+    ret
 
 # 233
