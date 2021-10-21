@@ -1,4 +1,4 @@
 architecture: 'test architecture'
-language: 'language.yml'
+language: 'test_lang.yml'
 level: 'flood_predictor' # not actually what this program does
 program_name: 'test program'
