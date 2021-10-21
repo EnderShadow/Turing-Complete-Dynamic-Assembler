@@ -9,5 +9,6 @@ label loop:
     add r0 0 io
     cmp r0 233
 <   jmp loop
+    jmp loop r0
 
 # 233
