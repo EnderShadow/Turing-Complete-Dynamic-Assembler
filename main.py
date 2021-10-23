@@ -499,5 +499,13 @@ def data_to_str(data: list[int]) -> str:
     return '\n'.join(lines)
 
 
+def num_bits_required(n: int) -> int:
+    # positive numbers will need a leading 0
+    if n > 0:
+        return len(bin(n)) - 1
+    # negative numbers need a leading 1, but the - in the string representation accounts for that
+    return len(bin(n)) - 2
+
+
 if __name__ == '__main__':
     main()
