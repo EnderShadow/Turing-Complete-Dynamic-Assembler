@@ -7,6 +7,8 @@ It works by having you define each instruction group and how it maps to a binary
 a text file you provide the program and it then will write the compiled data into the game's directory so that it
 can be used by the computer you designed within the game.
 
+## NOTE: This is no longer maintained since https://github.com/hlorenzi/customasm has more features and already does what this aimed to do
+
 ---
 
 ## Features
